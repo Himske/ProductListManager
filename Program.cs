@@ -2,14 +2,7 @@
 
 List<string> products = [];
 
-Console.WriteLine("-------------------------------------");
-Console.WriteLine("PRODUCT LIST MANAGER");
-Console.WriteLine("-------------------------------------");
-Console.WriteLine();
-Console.WriteLine("Enter product names. (LETTERS-NUMBER)");
-Console.WriteLine();
-Console.WriteLine("Type 'exit' to finish.");
-Console.WriteLine();
+Display.ShowMenu();
 
 while (true) {
     Console.Write("Product: ");
@@ -26,39 +19,20 @@ while (true) {
     List<string>  errors = Validation.ValidateInput(productName);
 
     if (errors.Count > 0) {
-        Console.ForegroundColor = ConsoleColor.Red;
-        foreach (string error in errors) {
-            Console.WriteLine(error);
-        }
+        Display.ShowErrors(errors);
     }
     else {
-        if (products.Count == 0) {
-            products.Add(productName);
+        if (products.Contains(productName)) {
+                Display.ShowWarning("Product already exists.");
         }
         else {
-            foreach (string product in products) {
-                if (string.Equals(productName, product)) {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("WARNING! Product already exists.");
-                }
-                else {
-                    products.Add(productName);
-                }
-            }
+            products.Add(productName);
+            Display.ShowSuccess("Product added successfully.");
         }
     }
-
-    Console.ResetColor();
 }
 
-products.Sort();
-
-Console.WriteLine();
-Console.WriteLine("Sorted product list:");
-Console.WriteLine();
-foreach (string product in products) {
-    Console.WriteLine($"- {product}");
-}
+Display.ShowSortedProductList(products);
 
 Console.Write("Press <Enter> to continue...");
 Console.ReadLine();
