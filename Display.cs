@@ -1,22 +1,26 @@
 ﻿namespace ProductListManager {
     public static class Display {
-        public static void ShowMenu() {
+        public static void ShowHeading() {
             Console.WriteLine("=====================================");
             Console.WriteLine("PRODUCT LIST MANAGER");
             Console.WriteLine("=====================================");
+        }
+        public static void ShowMenu() {
             Console.WriteLine();
-            Console.WriteLine("Enter product names. (LETTERS-NUMBER)");
-            Console.WriteLine();
-            Console.WriteLine("Type 'exit' to finish.");
+            Console.WriteLine("1. Add Product");
+            Console.WriteLine("2. View Products");
+            Console.WriteLine("3. Search Product");
+            Console.WriteLine("4. Delete Product");
+            Console.WriteLine("5. Statistics");
+            Console.WriteLine("6. Exit");
             Console.WriteLine();
         }
 
-        public static void ShowSortedProductList(List<string> products) {
+        public static void ShowProductListSorted(List<string> products) {
             products.Sort();
 
             Console.WriteLine();
-            Console.WriteLine("Sorted product list:");
-            Console.WriteLine();
+            Console.WriteLine("Products:");
             foreach (string product in products) {
                 Console.WriteLine($"- {product}");
             }
@@ -40,6 +44,12 @@
             Console.ForegroundColor= ConsoleColor.Green;
             Console.WriteLine(message);
             Console.ResetColor();
+        }
+
+        public static void ShowOptionDivider() {
+            Console.WriteLine();
+            Console.WriteLine("-------------------------------------");
+            Console.WriteLine();
         }
     }
 }
