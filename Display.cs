@@ -16,11 +16,11 @@
             Console.WriteLine();
         }
 
-        public static void ShowProductListSorted(List<string> products) {
+        public static void ShowProductListSorted(List<string> products, string heading) {
             products.Sort();
 
             Console.WriteLine();
-            Console.WriteLine("Products:");
+            Console.WriteLine($"{heading}:");
             foreach (string product in products) {
                 Console.WriteLine($"- {product}");
             }

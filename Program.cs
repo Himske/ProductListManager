@@ -3,16 +3,12 @@
 static void AddProduct(List<string> products) {
     while (true) {
         Console.WriteLine();
-        Console.Write("Enter product: ");
-        string? productName = Console.ReadLine();
+        Console.Write("Enter product (enter 'exit' to stop): ");
+        string productName = GetInput();
 
-        productName ??= "";  // Just to make my editor happy
-
-        if (productName.Trim().ToLower().Equals("exit")) {
+        if (productName.Equals("EXIT")) {
             break;
         }
-
-        productName = productName.ToUpper();
 
         List<string> errors = Validation.ValidateInput(productName);
 
@@ -31,11 +27,86 @@ static void AddProduct(List<string> products) {
     }
 }
 
-static void ListProducts(List<string> products) {
-    Display.ShowProductListSorted(products);
+static void DeleteProduct(List<string> products) {
+    Console.WriteLine();
+    Console.Write("Product name: ");
+    string productName = GetInput();
+
+    if (products.Contains(productName)) {
+        products.Remove(productName);
+        Display.ShowSuccess("Product removed successfully.");
+    } else {
+        Display.ShowWarning("That product doesn't exist.");
+    }
 }
 
-List<string> products = [];
+static string GetInput() {
+    string? input = Console.ReadLine();
+    input ??= "";  // Just to make my editor happy
+    input = input.Trim().ToUpper();
+    return input;
+}
+
+static void ListProducts(List<string> products) {
+    Display.ShowProductListSorted(products, "Products");
+}
+
+static void SearchProduct(List<string> products) {
+    List<string> result = [];
+    Console.WriteLine();
+    Console.Write("Search product: ");
+    string query = GetInput();
+    foreach (string product in products) {
+        if (product.StartsWith(query)) {
+            result.Add(product);
+        }
+    }
+    Display.ShowProductListSorted(result, "Results");
+}
+
+static List<string> LoadProducts() {
+    List<string> products = [];
+    try {
+        products = File.ReadAllLines("ProductList.txt").ToList();
+    } catch {
+        Console.WriteLine("No product file found.");
+        Console.WriteLine();
+    }
+    
+    return products;
+}
+
+static void SaveProducts(List<string> products) {
+    File.WriteAllLines("ProductList.txt", products);
+}
+
+static void ExitProgram(List<string> products) {
+    Console.WriteLine("Saving products...");
+    SaveProducts(products);
+    Console.WriteLine("Application closed.");
+    Environment.Exit(0);
+}
+
+static void ShowStatistics(List<string> products) {
+    List<int> productNumbers = [];
+
+    foreach (string product in products) {
+        string number = product.Split('-')[1];
+        productNumbers.Add(int.Parse(number));
+    }
+
+    int nofProducts = products.Count;
+
+    Console.WriteLine();
+    Console.WriteLine("Statistics:");
+    Console.WriteLine($"- Total Products: {nofProducts}");
+    Console.WriteLine($"- Lowest Number: {productNumbers.Min()}");
+    Console.WriteLine($"- Highest Number: {productNumbers.Max()}");
+    Console.WriteLine($"- Average Number: {productNumbers.Sum() / nofProducts}");
+}
+
+
+List<string> products = LoadProducts();
 
 Display.ShowHeading();
 Display.ShowMenu();
@@ -52,16 +123,16 @@ while (true) {
             ListProducts(products);
             break;
         case "3":
+            SearchProduct(products);
             break;
         case "4":
+            DeleteProduct(products);
             break;
         case "5":
+            ShowStatistics(products);
             break;
         case "6":
-            Console.WriteLine("Saving products...");
-            // Save products to file
-            Console.WriteLine("Application closed.");
-            Environment.Exit(0);
+            ExitProgram(products);
             break;
         default:
             Console.WriteLine("Invalid option.");
