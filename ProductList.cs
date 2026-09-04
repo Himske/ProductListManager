@@ -58,15 +58,10 @@
         }
 
         public void SearchProduct() {
-            List<string> result = [];
             Console.WriteLine();
             Console.Write("Search product: ");
             string query = GetInput();
-            foreach (string product in this.products) {
-                if (product.StartsWith(query)) {
-                    result.Add(product);
-                }
-            }
+            List<string> result = products.FindAll(s => s.Contains(query));
             Display.ShowProductListSorted(result, "Results");
         }
 
